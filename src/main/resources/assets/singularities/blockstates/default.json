@@ -1,0 +1,39 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"type": {
+			"compressor": {
+				"model": "cube",
+				"textures": {
+					"down": "singularities:blocks/compressor_side",
+					"up": "singularities:blocks/compressor_top",
+					"north": "singularities:blocks/compressor_front",
+					"south": "singularities:blocks/compressor_side",
+					"west": "singularities:blocks/compressor_side",
+					"east": "singularities:blocks/compressor_side",
+					"particle": "singularities:blocks/compressor_side"
+				}
+			}
+		},
+		"facing": {
+			"north": {},
+			"east": {
+				"y": 90
+			},
+			"south": {
+				"y": 180
+			},
+			"west": {
+				"y": 270
+			}
+		},
+		"type=singularity": {
+			"model": "builtin/generated",
+			"textures": {
+				"layer0": "singularities:items/singularity2",
+				"layer1": "singularities:items/singularity"
+			},
+			"transform": "forge:default-item"
+		}
+	}
+}

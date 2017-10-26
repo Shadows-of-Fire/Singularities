@@ -55,7 +55,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 		ticks++;
 		if (ticks % 20 == 0) {
 			ticks = 0;
-			for (EntityItem ei : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos, pos.add(1, 0, 1)).grow(3, 1, 3))) {
+			for (EntityItem ei : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)).grow(3, 1, 3))) {
 				ItemStack stack = ei.getItem();
 				ICompressorRecipe rec = CompressorManager.searchByStack(stack);
 				if (rec != null && (rec == recipe || recipe == null)) {

@@ -27,8 +27,9 @@ public class CompressorWrapper implements IRecipeWrapper {
 	}
 
 	@Override
-	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-		Minecraft.getMinecraft().fontRenderer.drawString(I18n.format("jei." + Singularities.MODID + ".needed.name", rec.getRequiredInputs()), 21, 0, Color.BLACK.getRGB());
+	public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+		int offset = String.valueOf(rec.getRequiredInputs()).length();
+		mc.fontRenderer.drawString(I18n.format("jei." + Singularities.MODID + ".needed.name", rec.getRequiredInputs()), 22 + 8 / offset, 0, Color.BLACK.getRGB());
 	}
 
 }

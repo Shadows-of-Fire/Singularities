@@ -20,6 +20,8 @@ import shadows.singularity.recipe.ICompressorRecipe;
 
 public class TileCompressor extends TileEntity implements ITickable {
 
+	public static double distance = 1.5D;
+	
 	private ICompressorRecipe recipe;
 	private int ticks = 0;
 	private int counter = 0;
@@ -75,7 +77,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 			stack.setCount(0);
 		} else if (stacksize - needed >= 0) {
 			counter = 0;
-			EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + 3.5D, pos.getZ(), recipe.getOutputStack().copy());
+			EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + distance, pos.getZ(), recipe.getOutputStack().copy());
 			i.setDefaultPickupDelay();
 			world.spawnEntity(i);
 			recipe = null;

@@ -75,7 +75,9 @@ public class TileCompressor extends TileEntity implements ITickable {
 			stack.setCount(0);
 		} else if (stacksize - needed >= 0) {
 			counter = 0;
-			Block.spawnAsEntity(world, pos.up(), recipe.getOutputStack().copy());
+			EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + 3.5D, pos.getZ(), recipe.getOutputStack().copy());
+			i.setDefaultPickupDelay();
+			world.spawnEntity(i);
 			recipe = null;
 			stack.shrink(needed);
 		}

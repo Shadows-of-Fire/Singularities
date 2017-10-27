@@ -2,9 +2,12 @@ package shadows.singularity;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +24,7 @@ import shadows.singularity.block.TileCompressor;
 import shadows.singularity.item.ItemSingularity;
 import shadows.singularity.item.TileSingularity;
 import shadows.singularity.proxy.Proxy;
+import shadows.singularity.recipe.RecipeHelper;
 import shadows.singularity.recipe.SingularityConfig;
 
 @Mod(modid = Singularities.MODID, name = Singularities.NAME, version = "1.0.0")
@@ -56,6 +60,12 @@ public class Singularities {
 	@SubscribeEvent
 	public void item(Register<Item> e) {
 		e.getRegistry().registerAll(SINGULARITY, new ItemBlock(COMPRESSOR).setRegistryName(COMPRESSOR.getRegistryName()));
+	}
+	
+	@SubscribeEvent
+	public void recipe(Register<IRecipe> e) {
+		RecipeHelper.registry = e.getRegistry();
+		RecipeHelper.addShaped(COMPRESSOR, 3, 3, "blockDiamond", Blocks.PISTON, "blockDiamond", Blocks.ENDER_CHEST, Items.NETHER_STAR, Blocks.ENDER_CHEST, "blockDiamond", Blocks.PISTON, "blockDiamond");
 	}
 
 	@SubscribeEvent

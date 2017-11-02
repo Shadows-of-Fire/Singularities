@@ -23,7 +23,7 @@ import shadows.singularity.item.TileSingularity;
 import shadows.singularity.proxy.Proxy;
 import shadows.singularity.recipe.SingularityConfig;
 
-@Mod(modid = Singularities.MODID, name = Singularities.NAME, version = "1.0.0")
+@Mod(modid = Singularities.MODID, name = Singularities.NAME, version = "1.1.0")
 public class Singularities {
 
 	public static final String MODID = "singularities";

@@ -36,13 +36,13 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 			GlStateManager.translate(x + 0.5, y + 1.9, z + 0.5);
 			float angleRotate = thirdPerson ? -viewerYaw : -viewerYaw % 360 + 180;
 			float angleRotateItem = !thirdPerson ? -viewerYaw : -viewerYaw % 360 + 180;
-			
+
 			GlStateManager.rotate(angleRotateItem, 0, 1, 0);
 			GlStateManager.enableBlend();
 			GlStateManager.disableDepth();
-			
+
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			
+
 			Minecraft.getMinecraft().getRenderItem().renderItem(rec.getOutputStack(), TransformType.FIXED);
 
 			GlStateManager.rotate(-angleRotateItem, 0, 1, 0);

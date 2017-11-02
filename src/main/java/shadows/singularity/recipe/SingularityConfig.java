@@ -3,6 +3,7 @@ package shadows.singularity.recipe;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import shadows.singularity.block.TileCompressor;
 import shadows.singularity.item.Singularity;
 
 public class SingularityConfig {
@@ -27,6 +28,8 @@ public class SingularityConfig {
 			Singularity.register(Singularity.fromString(s));
 
 		pipeInput = config.getBoolean("Pipe Input", "general", false, "If compressors will accept input via pipes");
+
+		TileCompressor.distance = config.getFloat("Compressor Spawn Distance", "general", 1.5F, 1, 10, "How high above the compressor singularities will spawn when finished crafting.");
 
 		if (config.hasChanged()) config.save();
 	}

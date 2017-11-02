@@ -25,6 +25,8 @@ import shadows.singularity.recipe.SingularityConfig;
 
 public class TileCompressor extends TileEntity implements ITickable {
 
+	public static double distance = 1.5D;
+
 	private ICompressorRecipe recipe;
 	private int ticks = 0;
 	private int counter = 0;
@@ -74,7 +76,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 				}
 			}
 		}
-		if(recipe != null) tryIncreaseCount(handler.getStackInSlot(0));
+		if (recipe != null) tryIncreaseCount(handler.getStackInSlot(0));
 	}
 
 	public void tryIncreaseCount(ItemStack stack) {
@@ -86,7 +88,9 @@ public class TileCompressor extends TileEntity implements ITickable {
 			stack.setCount(0);
 		} else if (stacksize - needed >= 0) {
 			counter = 0;
-			Block.spawnAsEntity(world, pos.up(), recipe.getOutputStack().copy());
+			EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + distance, pos.getZ(), recipe.getOutputStack().copy());
+			i.setDefaultPickupDelay();
+			world.spawnEntity(i);
 			recipe = null;
 
 			stack.shrink(needed);
@@ -143,11 +147,11 @@ public class TileCompressor extends TileEntity implements ITickable {
 	private static final class CompressorItemHandler extends ItemStackHandler {
 
 		private final TileCompressor tile;
-		
+
 		public CompressorItemHandler(TileCompressor tile) {
 			this.tile = tile;
 		}
-		
+
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			return ItemStack.EMPTY;
@@ -156,7 +160,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if (tile.recipe != null && tile.recipe.getInput().apply(stack)) return super.insertItem(slot, stack, simulate);
-			else if(tile.recipe == null && (tile.recipe = CompressorManager.searchByStack(stack)) != null) return super.insertItem(slot, stack, simulate);
+			else if (tile.recipe == null && (tile.recipe = CompressorManager.searchByStack(stack)) != null) return super.insertItem(slot, stack, simulate);
 			return stack;
 		}
 

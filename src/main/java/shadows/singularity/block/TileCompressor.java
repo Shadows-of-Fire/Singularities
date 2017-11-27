@@ -18,12 +18,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import shadows.singularity.recipe.CompressorManager;
 import shadows.singularity.recipe.ICompressorRecipe;
 import shadows.singularity.recipe.SingularityConfig;
 
 public class TileCompressor extends TileEntity implements ITickable {
+
+	public static final String RECENT_KEY = "recent_eject";
 
 	public static double distance = 1.5D;
 
@@ -58,6 +61,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 		counter = tag.getInteger("count");
 		recipe = CompressorManager.searchByName(new ResourceLocation(tag.getString("recipe")));
 		handler.deserializeNBT(tag.getCompoundTag("handler"));
+		if (handler.getSlots() == 1) handler.setSize(10); //Migrate old data
 		super.readFromNBT(tag);
 	}
 
@@ -68,15 +72,15 @@ public class TileCompressor extends TileEntity implements ITickable {
 		if (ticks % 20 == 0) {
 			ticks = 0;
 			for (EntityItem ei : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)).grow(3, 1, 3))) {
+				if (ei.getEntityData().getBoolean(RECENT_KEY)) continue;
 				ItemStack stack = ei.getItem();
-				ICompressorRecipe rec = CompressorManager.searchByStack(stack);
-				if (rec != null && (rec == recipe || recipe == null)) {
-					if (recipe == null) recipe = rec;
-					tryIncreaseCount(stack);
-				}
+				findRecipeAndUse(stack);
 			}
 		}
-		if (recipe != null) tryIncreaseCount(handler.getStackInSlot(0));
+		for (int i = 0; i < handler.getSlots(); i++) {
+			if(recipe != null) tryIncreaseCount(handler.getStackInSlot(i));
+			else findRecipeAndUse(handler.getStackInSlot(i));
+		}
 	}
 
 	public void tryIncreaseCount(ItemStack stack) {
@@ -87,23 +91,42 @@ public class TileCompressor extends TileEntity implements ITickable {
 			counter += stacksize;
 			stack.setCount(0);
 		} else if (stacksize - needed >= 0) {
+
+			TileEntity e = world.getTileEntity(pos.down());
+			if (e != null && e.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+				if (!jamItRightInThere(e.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))) trySpawnEntity();
+			} else trySpawnEntity();
+
 			counter = 0;
-			EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + distance, pos.getZ(), recipe.getOutputStack().copy());
-			i.setDefaultPickupDelay();
-			world.spawnEntity(i);
 			recipe = null;
-
 			stack.shrink(needed);
-		}
 
+		}
 		if (!stack.isEmpty()) {
-			ICompressorRecipe rec = CompressorManager.searchByStack(stack);
-			if (rec != null && (rec == recipe || recipe == null)) if (recipe == null) recipe = rec;
-			if (rec != null) tryIncreaseCount(stack);
+			findRecipeAndUse(stack);
 		}
 
 		markDirty();
 		VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
+	}
+
+	private void findRecipeAndUse(ItemStack stack) {
+		ICompressorRecipe rec = CompressorManager.searchByStack(stack);
+		if (rec != null && (rec == recipe || recipe == null)) if (recipe == null) recipe = rec;
+		if (rec != null) tryIncreaseCount(stack);
+	}
+
+	private void trySpawnEntity() {
+		EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + distance, pos.getZ(), recipe.getOutputStack().copy());
+		i.setDefaultPickupDelay();
+		i.getEntityData().setBoolean(RECENT_KEY, true);
+		world.spawnEntity(i);
+	}
+
+	private boolean jamItRightInThere(IItemHandler handad) {
+		for (int i = 0; i < handad.getSlots(); i++)
+			if (handad.insertItem(i, recipe.getOutputStack().copy(), false).isEmpty()) return true;
+		return false;
 	}
 
 	@Override
@@ -134,13 +157,13 @@ public class TileCompressor extends TileEntity implements ITickable {
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing facing) {
-		if (SingularityConfig.pipeInput && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
+		if (SingularityConfig.pipeInput && facing != EnumFacing.UP && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
 		return super.hasCapability(cap, facing);
 	}
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing facing) {
-		if (SingularityConfig.pipeInput && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(handler);
+		if (facing != EnumFacing.UP && SingularityConfig.pipeInput && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(handler);
 		return super.getCapability(cap, facing);
 	}
 
@@ -149,6 +172,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 		private final TileCompressor tile;
 
 		public CompressorItemHandler(TileCompressor tile) {
+			super(10);
 			this.tile = tile;
 		}
 

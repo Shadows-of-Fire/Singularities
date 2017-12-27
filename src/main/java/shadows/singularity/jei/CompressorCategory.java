@@ -34,7 +34,7 @@ public class CompressorCategory implements IRecipeCategory<CompressorWrapper> {
 
 	@Override
 	public String getModName() {
-		return Singularities.NAME;
+		return Singularities.MODNAME;
 	}
 
 	@Override

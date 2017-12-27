@@ -40,7 +40,6 @@ public class RenderSingularity extends TileEntitySpecialRenderer<TileSingularity
 
 			GlStateManager.color(cr, cg, cb, ca);
 			GlStateManager.disableAlpha();
-			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			BufferBuilder bob = t.getBuffer();
@@ -55,10 +54,8 @@ public class RenderSingularity extends TileEntitySpecialRenderer<TileSingularity
 			t.draw();
 
 			GlStateManager.translate(0, 0, -0.5);
-			GlStateManager.resetColor();
-			GlStateManager.enableDepth();
+			if (transform == TransformType.GUI) GlStateManager.enableDepth();
 			GlStateManager.enableAlpha();
-			GlStateManager.disableBlend();
 		}
 
 		GlStateManager.translate(0.5, 0.5, 0.5);

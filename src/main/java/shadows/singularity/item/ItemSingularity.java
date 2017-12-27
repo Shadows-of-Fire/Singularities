@@ -1,29 +1,26 @@
 package shadows.singularity.item;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
+import shadows.placebo.item.base.ItemBase;
 import shadows.singularity.Singularities;
 
-public class ItemSingularity extends Item {
+public class ItemSingularity extends ItemBase {
 
 	public ItemSingularity() {
+		super("singularity", Singularities.INFO);
 		this.setHasSubtypes(true);
-		this.setMaxDamage(0);
-		setRegistryName(Singularities.MODID, "singularity");
-		this.setUnlocalizedName(Singularities.MODID + ".singularity");
-		this.setCreativeTab(Singularities.TAB);
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		int i = MathHelper.clamp(stack.getItemDamage(), 0, Singularity.getTotalSingularityCount() - 1);
-		return Singularities.proxy.translate(getUnlocalizedName() + ".name", StringUtils.capitalize(Singularity.getByID(i).getName()));
+		return Singularities.PROXY.translate(getUnlocalizedName() + ".name", WordUtils.capitalize(Singularity.getByID(i).getName()));
 	}
 
 	@Override

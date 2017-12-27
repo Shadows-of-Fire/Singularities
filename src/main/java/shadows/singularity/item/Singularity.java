@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.base.Preconditions;
 
 import net.minecraft.item.EnumRarity;
@@ -38,6 +40,13 @@ public class Singularity {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String makeOreName() {
+		String[] split = name.split(" ");
+		String concat = "";
+		for(String s : split) concat += s;
+		return "singularity" + StringUtils.capitalize(concat);
 	}
 
 	public int getColor1() {
@@ -81,7 +90,7 @@ public class Singularity {
 
 	public static Singularity fromString(String s) {
 		String[] split = s.split(", ");
-		Preconditions.checkArgument(split.length == 4, "Attempting to parse invalid string for singularity! String: " + s);
+		Preconditions.checkArgument(split.length == 4, "Invalid Singularity! String: " + s);
 		String name = split[0];
 		int color1 = Integer.parseInt(split[1].contains("0x") ? split[1].substring(2) : split[1], split[1].contains("0x") ? 16 : 10);
 		int color2 = Integer.parseInt(split[2].contains("0x") ? split[2].substring(2) : split[2], split[2].contains("0x") ? 16 : 10);

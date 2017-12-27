@@ -15,10 +15,10 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import shadows.placebo.Placebo;
 import shadows.singularity.Singularities;
 import shadows.singularity.block.TileCompressor;
 import shadows.singularity.client.ItemLayerWrapper;
-import shadows.singularity.client.RenamedStateMapper;
 import shadows.singularity.client.RenderCompressor;
 import shadows.singularity.client.RenderSingularity;
 import shadows.singularity.item.Singularity;
@@ -40,7 +40,7 @@ public class ClientProxy extends Proxy {
 
 	@SubscribeEvent
 	public void models(ModelRegistryEvent e) {
-		ModelLoader.setCustomStateMapper(Singularities.COMPRESSOR, new RenamedStateMapper("default", ",type=compressor"));
+		Placebo.PROXY.useRenamedMapper(Singularities.COMPRESSOR, "default", ",type=compressor");
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(Singularities.COMPRESSOR), 0, new ModelResourceLocation(new ResourceLocation(Singularities.MODID, "default"), "facing=north,type=compressor"));
 		for (Singularity s : Singularity.getSingularities())
 			ModelLoader.setCustomModelResourceLocation(Singularities.SINGULARITY, s.getID(), MRL);

@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 public class CompressorManager {
 
 	private static final Map<ResourceLocation, ICompressorRecipe> RECIPES = new HashMap<>();
+	private static Collection<ICompressorRecipe> VALID_RECIPES;
 
 	public static void registerRecipe(ICompressorRecipe recipe) {
 		if (RECIPES.get(recipe.getID()) == null) RECIPES.put(recipe.getID(), recipe);
@@ -29,6 +30,7 @@ public class CompressorManager {
 	}
 
 	public static Collection<ICompressorRecipe> getValidRecipes() {
-		return RECIPES.values().stream().filter((r) -> r.getInput().getMatchingStacks().length > 0).collect(Collectors.toList());
+		if(VALID_RECIPES == null) VALID_RECIPES = RECIPES.values().stream().filter((r) -> r.getInput().getMatchingStacks().length > 0).collect(Collectors.toList());
+		return VALID_RECIPES;
 	}
 }

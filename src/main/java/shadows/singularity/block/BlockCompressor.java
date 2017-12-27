@@ -4,26 +4,31 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import shadows.placebo.block.base.BlockBasic;
 import shadows.singularity.Singularities;
+import shadows.singularity.recipe.SingularityConfig;
 
-public class BlockCompressor extends BlockHorizontal {
+public class BlockCompressor extends BlockBasic {
 
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	
 	public BlockCompressor() {
-		super(Material.ANVIL);
-		setRegistryName(Singularities.MODID, "compressor");
-		setUnlocalizedName(Singularities.MODID + ".compressor");
+		super("compressor", Material.ANVIL, 5.0F, 300F, Singularities.INFO);
 		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		setCreativeTab(Singularities.TAB);
 	}
 
 	@Override
@@ -65,6 +70,12 @@ public class BlockCompressor extends BlockHorizontal {
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+	}
+	
+	@Override
+	public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+		if(SingularityConfig.hideCompressor) return;
+		super.getSubBlocks(itemIn, items);
 	}
 
 }

@@ -34,8 +34,8 @@ public class Singularities {
 
 	public static final String MODID = "singularities";
 	public static final String MODNAME = "Singularities";
-	public static final String VERSION = "2.0.0";
-	public static final String DEPS = "required-after:placebo@[1.1.3,);before:crafttweaker;after:avaritia";
+	public static final String VERSION = "2.1.0";
+	public static final String DEPS = "required-after:placebo@[1.2.0,);before:crafttweaker;after:avaritia";
 
 	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
 

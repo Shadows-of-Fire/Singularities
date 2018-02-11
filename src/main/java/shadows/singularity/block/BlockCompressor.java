@@ -18,7 +18,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import shadows.placebo.block.base.BlockBasic;
+import shadows.placebo.block.BlockBasic;
 import shadows.singularity.Singularities;
 import shadows.singularity.recipe.SingularityConfig;
 

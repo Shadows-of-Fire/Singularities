@@ -7,7 +7,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
-import shadows.placebo.item.base.ItemBase;
+import shadows.placebo.item.ItemBase;
 import shadows.singularity.Singularities;
 
 public class ItemSingularity extends ItemBase {

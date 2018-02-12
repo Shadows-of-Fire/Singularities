@@ -1,5 +1,8 @@
 package shadows.singularity;
 
+import java.util.Comparator;
+
+import it.unimi.dsi.fastutil.ints.IntComparators;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -34,7 +37,7 @@ public class Singularities {
 
 	public static final String MODID = "singularities";
 	public static final String MODNAME = "Singularities";
-	public static final String VERSION = "2.1.1";
+	public static final String VERSION = "2.2.0";
 	public static final String DEPS = "required-after:placebo@[1.2.0,);before:crafttweaker;after:avaritia";
 
 	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
@@ -71,9 +74,7 @@ public class Singularities {
 	@SubscribeEvent
 	public void item(Register<Item> e) {
 		e.getRegistry().registerAll(INFO.getItemList().toArray(new Item[2]));
-		for (Singularity s : Singularity.getSingularities()) {
-			OreDictionary.registerOre(s.makeOreName(), new ItemStack(SINGULARITY, 1, s.getID()));
-		}
+		Singularity.operateSorted(s -> OreDictionary.registerOre(s.makeOreName(), new ItemStack(SINGULARITY, 1, s.getID())));
 	}
 
 	@SubscribeEvent
@@ -89,5 +90,15 @@ public class Singularities {
 		SingularityConfig.init(e);
 		PROXY.init(e);
 		INFO.purge();
+	}
+
+	public static class SingularityComparator implements Comparator<Singularity> {
+
+		public static SingularityComparator INSTANCE = new SingularityComparator();
+
+		@Override
+		public int compare(Singularity o1, Singularity o2) {
+			return IntComparators.NATURAL_COMPARATOR.compare(o1.getID(), o2.getID());
+		}
 	}
 }

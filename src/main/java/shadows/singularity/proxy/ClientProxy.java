@@ -32,8 +32,8 @@ public class ClientProxy extends Proxy {
 		MinecraftForge.EVENT_BUS.register(this);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new RenderCompressor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSingularity.class, new RenderSingularity());
-		for (int i = 0; i < Singularity.getTotalSingularityCount(); i++)
-			ForgeHooksClient.registerTESRItemStack(Singularities.SINGULARITY, i, TileSingularity.class);
+		for (Singularity s : Singularity.getSingularities())
+			ForgeHooksClient.registerTESRItemStack(Singularities.SINGULARITY, s.getID(), TileSingularity.class);
 	}
 
 	private static final ModelResourceLocation MRL = new ModelResourceLocation(new ResourceLocation(Singularities.MODID, "default"), "type=singularity");

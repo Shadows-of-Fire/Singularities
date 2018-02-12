@@ -7,7 +7,7 @@ public class Proxy {
 
 	public void preInit(FMLPreInitializationEvent e) {
 	}
-	
+
 	public void init(FMLInitializationEvent e) {
 	}
 

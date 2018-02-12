@@ -30,7 +30,7 @@ public class CompressorManager {
 	}
 
 	public static Collection<ICompressorRecipe> getValidRecipes() {
-		if(VALID_RECIPES == null) VALID_RECIPES = RECIPES.values().stream().filter((r) -> r.getInput().getMatchingStacks().length > 0).collect(Collectors.toList());
+		if (VALID_RECIPES == null) VALID_RECIPES = RECIPES.values().stream().filter((r) -> r.getInput().getMatchingStacks().length > 0).collect(Collectors.toList());
 		return VALID_RECIPES;
 	}
 }

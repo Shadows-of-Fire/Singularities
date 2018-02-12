@@ -25,7 +25,7 @@ import shadows.singularity.recipe.SingularityConfig;
 public class BlockCompressor extends BlockBasic {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	
+
 	public BlockCompressor() {
 		super("compressor", Material.ANVIL, 5.0F, 300F, Singularities.INFO);
 		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
@@ -71,10 +71,10 @@ public class BlockCompressor extends BlockBasic {
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-	
+
 	@Override
 	public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
-		if(SingularityConfig.hideCompressor) return;
+		if (SingularityConfig.hideCompressor) return;
 		super.getSubBlocks(itemIn, items);
 	}
 

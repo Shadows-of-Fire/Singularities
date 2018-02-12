@@ -31,6 +31,7 @@ public class AvaritiaCompat {
 	}
 
 	public static void copyFromAvaritia(morph.avaritia.recipe.compressor.ICompressorRecipe recipe) {
+		if (recipe.getIngredients().isEmpty() || recipe.getIngredients().get(0).getMatchingStacks().length == 0) return;
 		if (CompressorManager.searchByStack(recipe.getIngredients().get(0).getMatchingStacks()[0]) != null) return;
 		CompressorManager.registerRecipe(new shadows.singularity.recipe.CompressorRecipe(recipe.getRegistryName(), recipe.getIngredients().get(0), recipe.getCost(), recipe.getResult()));
 	}
@@ -52,13 +53,14 @@ public class AvaritiaCompat {
 
 		NonNullList<Ingredient> ing = catalyst.getIngredients();
 		ing.replaceAll((i) -> {
-			if(i.getMatchingStacks()[0].getItem() instanceof ItemSingularity)
-			return fromAvaritiaStack(i.getMatchingStacks()[0]);
+			if (i.getMatchingStacks()[0].getItem() instanceof ItemSingularity) return fromAvaritiaStack(i.getMatchingStacks()[0]);
 			return i;
 		});
-		
-		for(Singularity s : Singularity.getSingularities()) {
-			if(!ing.stream().anyMatch((i) -> {return i.apply(s.getStack());} )){
+
+		for (Singularity s : Singularity.getSingularities()) {
+			if (!ing.stream().anyMatch((i) -> {
+				return i.apply(s.getStack());
+			})) {
 				ing.add(new OreIngredient(s.makeOreName()));
 			}
 		}
@@ -66,15 +68,14 @@ public class AvaritiaCompat {
 		IExtremeRecipe newCatalyst = new ExtremeShapelessRecipe(ing, catalyst.getRecipeOutput()).setRegistryName(catalyst.getRegistryName());
 		AvaritiaRecipeManager.EXTREME_RECIPES.put(newCatalyst.getRegistryName(), newCatalyst);
 	}
-	
+
 	static Map<Integer, String> names;
-	
+
 	private static OreIngredient fromAvaritiaStack(ItemStack stack) {
-		if(names == null) names = ReflectionHelper.getPrivateValue(ItemMultiType.class, (ItemMultiType) stack.getItem(), "names");
+		if (names == null) names = ReflectionHelper.getPrivateValue(ItemMultiType.class, (ItemMultiType) stack.getItem(), "names");
 		String ore = "singularity" + WordUtils.capitalize(names.get(stack.getMetadata()));
 		OreDictionary.registerOre(ore, stack);
 		return new OreIngredient(ore);
 	}
-	
 
 }

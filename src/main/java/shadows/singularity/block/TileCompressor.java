@@ -78,7 +78,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 			}
 		}
 		for (int i = 0; i < handler.getSlots(); i++) {
-			if(recipe != null) tryIncreaseCount(handler.getStackInSlot(i));
+			if (recipe != null) tryIncreaseCount(handler.getStackInSlot(i));
 			else findRecipeAndUse(handler.getStackInSlot(i));
 		}
 	}

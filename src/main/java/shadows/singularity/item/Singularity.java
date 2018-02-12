@@ -41,11 +41,12 @@ public class Singularity {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String makeOreName() {
 		String[] split = name.split(" ");
 		String concat = "";
-		for(String s : split) concat += s;
+		for (String s : split)
+			concat += s;
 		return "singularity" + StringUtils.capitalize(concat);
 	}
 

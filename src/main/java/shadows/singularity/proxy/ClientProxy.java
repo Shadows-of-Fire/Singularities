@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -22,18 +21,14 @@ import shadows.singularity.client.ItemLayerWrapper;
 import shadows.singularity.client.RenderCompressor;
 import shadows.singularity.client.RenderSingularity;
 import shadows.singularity.item.Singularity;
-import shadows.singularity.item.TileSingularity;
 
 public class ClientProxy extends Proxy {
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void preInit(FMLPreInitializationEvent e) {
 		MinecraftForge.EVENT_BUS.register(this);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new RenderCompressor());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSingularity.class, new RenderSingularity());
-		for (Singularity s : Singularity.getSingularities())
-			ForgeHooksClient.registerTESRItemStack(Singularities.SINGULARITY, s.getID(), TileSingularity.class);
+		Singularities.SINGULARITY.setTileEntityItemStackRenderer(new RenderSingularity());
 	}
 
 	private static final ModelResourceLocation MRL = new ModelResourceLocation(new ResourceLocation(Singularities.MODID, "default"), "type=singularity");

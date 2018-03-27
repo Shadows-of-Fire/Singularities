@@ -9,25 +9,23 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import shadows.singularity.Singularities;
-import shadows.singularity.item.TileSingularity;
 
-public class RenderSingularity extends TileEntitySpecialRenderer<TileSingularity> {
+public class RenderSingularity extends TileEntityItemStackRenderer {
 
 	public static ItemLayerWrapper model;
-	public static ItemStack stack;
 	public static TransformType transform;
 	private static int haloColour = 0xFF000000;
-	private static float ca = (float) (haloColour >> 24 & 255) / 255.0F;
-	private static float cr = (float) (haloColour >> 16 & 255) / 255.0F;
-	private static float cg = (float) (haloColour >> 8 & 255) / 255.0F;
-	private static float cb = (float) (haloColour & 255) / 255.0F;
+	private static float ca = (haloColour >> 24 & 255) / 255.0F;
+	private static float cr = (haloColour >> 16 & 255) / 255.0F;
+	private static float cg = (haloColour >> 8 & 255) / 255.0F;
+	private static float cb = (haloColour & 255) / 255.0F;
 
 	@Override
-	public void render(TileSingularity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void renderByItem(ItemStack stack) {
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureAtlasSprite halo = mc.getTextureMapBlocks().getAtlasSprite(Singularities.MODID + ":items/halo");
 		Tessellator t = Tessellator.getInstance();
@@ -43,7 +41,7 @@ public class RenderSingularity extends TileEntitySpecialRenderer<TileSingularity
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			BufferBuilder bob = t.getBuffer();
-			this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 			GlStateManager.translate(0, 0, 0.5);
 			bob.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

@@ -1,6 +1,5 @@
 package shadows.singularity.client;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Matrix4f;
@@ -13,27 +12,11 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 public class ItemLayerWrapper implements IBakedModel {
 
 	private final IBakedModel internal;
-
-	private class Overrides extends ItemOverrideList {
-
-		public Overrides() {
-			super(Collections.emptyList());
-		}
-
-		@Override
-		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
-			RenderSingularity.stack = stack;
-			return ItemLayerWrapper.this;
-		}
-	}
 
 	public ItemLayerWrapper(IBakedModel internal) {
 		this.internal = internal;
@@ -70,12 +53,12 @@ public class ItemLayerWrapper implements IBakedModel {
 
 	@Override
 	public ItemOverrideList getOverrides() {
-		return new Overrides();
+		return ItemOverrideList.NONE;
 	}
 
 	@Override
 	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
-		RenderSingularity.transform = cameraTransformType;
+		//You can use a field on your TileEntityItemStackRenderer to store this TransformType for use in renderByItem, this method is always called before it.
 		return Pair.of(this, internal.handlePerspective(cameraTransformType).getRight());
 	}
 

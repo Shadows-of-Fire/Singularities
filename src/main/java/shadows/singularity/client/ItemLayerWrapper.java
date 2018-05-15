@@ -57,9 +57,10 @@ public class ItemLayerWrapper implements IBakedModel {
 	}
 
 	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type) {
+		RenderSingularity.transform = type;
 		//You can use a field on your TileEntityItemStackRenderer to store this TransformType for use in renderByItem, this method is always called before it.
-		return Pair.of(this, internal.handlePerspective(cameraTransformType).getRight());
+		return Pair.of(this, internal.handlePerspective(type).getRight());
 	}
 
 }

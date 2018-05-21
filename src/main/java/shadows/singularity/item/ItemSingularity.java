@@ -31,4 +31,9 @@ public class ItemSingularity extends ItemBase {
 	public EnumRarity getRarity(ItemStack stack) {
 		return Singularity.getByID(stack.getMetadata()).getRarity();
 	}
+	
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		return Singularity.getByID(stack.getMetadata()).hasEffect();
+	}
 }

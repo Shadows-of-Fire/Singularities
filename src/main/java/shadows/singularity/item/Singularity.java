@@ -22,7 +22,7 @@ public class Singularity {
 
 	private static final Map<String, Singularity> NAME_TO_SINGULARITY = new HashMap<>();
 	private static final Map<Integer, Singularity> META_TO_SINGULARITY = new HashMap<>();
-	private static final Singularity MISSING = new Singularity("MISSING", 0x00000, 0x00000, OreDictionary.WILDCARD_VALUE, EnumRarity.EPIC);
+	private static final Singularity MISSING = new Singularity("MISSING", 0x00000, 0x00000, OreDictionary.WILDCARD_VALUE, EnumRarity.EPIC, false);
 	private static final List<Singularity> SORTED = new ArrayList<>();
 
 	private final String name;
@@ -30,8 +30,9 @@ public class Singularity {
 	private final int color2;
 	private final int id;
 	private final EnumRarity rarity;
+	private final boolean hasEffect;
 
-	public Singularity(String name, int color1, int color2, int meta, EnumRarity rarity) {
+	public Singularity(String name, int color1, int color2, int meta, EnumRarity rarity, boolean hasEffect) {
 		Preconditions.checkArgument(NAME_TO_SINGULARITY.get(name) == null, "Duplicate singularity! Name: " + name);
 		Preconditions.checkArgument(META_TO_SINGULARITY.get(meta) == null, "Meta already in use! Name: " + name + ", Meta: " + meta);
 		this.name = name;
@@ -39,10 +40,11 @@ public class Singularity {
 		this.color2 = color2;
 		this.id = meta;
 		this.rarity = rarity;
+		this.hasEffect = hasEffect;
 	}
 
-	public Singularity(String name, int color1, int color2, int meta) {
-		this(name, color1, color2, meta, EnumRarity.UNCOMMON);
+	public Singularity(String name, int color1, int color2, int meta, boolean hasEffect) {
+		this(name, color1, color2, meta, EnumRarity.UNCOMMON, hasEffect);
 	}
 
 	public String getName() {
@@ -76,6 +78,10 @@ public class Singularity {
 	public EnumRarity getRarity() {
 		return rarity;
 	}
+	
+	public boolean hasEffect() {
+		return hasEffect;
+	}
 
 	public static Collection<Singularity> getSingularities() {
 		return NAME_TO_SINGULARITY.values();
@@ -89,19 +95,17 @@ public class Singularity {
 		return META_TO_SINGULARITY.getOrDefault(id, MISSING);
 	}
 
-	public static void init() {
-	}
-
 	public static Singularity fromString(String s) {
 		String[] split = s.split(", ");
-		Preconditions.checkArgument(split.length == 5, "Invalid Singularity! String: " + s);
+		Preconditions.checkArgument(split.length == 5 || split.length == 6, "Invalid Singularity! String: " + s);
 		String name = split[0];
 		int color1 = Integer.parseInt(split[1].contains("0x") ? split[1].substring(2) : split[1], split[1].contains("0x") ? 16 : 10);
 		int color2 = Integer.parseInt(split[2].contains("0x") ? split[2].substring(2) : split[2], split[2].contains("0x") ? 16 : 10);
 		int rarity = Integer.parseInt(split[3]);
 		int meta = Integer.parseInt(split[4]);
+		boolean hasEffect = split.length == 6 ? Boolean.parseBoolean(split[5]) : false;
 		Preconditions.checkArgument(rarity >= 0 && rarity <= 3, "Invalid rarity int value, must be between 0 and 3.  Current: " + rarity);
-		return new Singularity(name, color1, color2, meta, EnumRarity.values()[rarity]);
+		return new Singularity(name, color1, color2, meta, EnumRarity.values()[rarity], hasEffect);
 	}
 
 	/**

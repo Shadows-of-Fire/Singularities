@@ -31,7 +31,7 @@ public class SingularityConfig {
 
 		int dataFixMarker = config.getInt("Data Fix Marker", "Data", 0, 0, 1, "Do not edit.");
 
-		String[] singularities = config.getStringList("Singularities", "general", DEFAULT_SINGULARITY, "A list of singularity definitions.  Order is name, color1, color2, rarity, meta.  String, integer, integer, integer, integer.  Rarity must be between 0 and 3 inclusive.");
+		String[] singularities = config.getStringList("Singularities", "general", DEFAULT_SINGULARITY, "A list of singularity definitions.  Order is name, color1, color2, rarity, meta, glowing.  String, integer, integer, integer, integer, boolean.  Rarity must be between 0 and 3 inclusive.  Glowing is optional.");
 		recipes = config.getStringList("Recipes", "general", DEFAULT_RECIPES, "A list of compressor recipe definitions.  Order is name, input, number of inputs, output.  Input may also be an itemstack, provided examples use oredict.");
 
 		if (dataFixMarker == 0) {

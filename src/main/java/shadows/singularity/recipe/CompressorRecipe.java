@@ -46,7 +46,7 @@ public class CompressorRecipe implements ICompressorRecipe {
 
 	public static CompressorRecipe fromString(String s) {
 		String[] split = s.split(", ");
-		Preconditions.checkArgument(split.length == 4);
+		Preconditions.checkArgument(split.length == 4, "Invalid Compressor Recipe (failed to split on \", \"): " + s);
 		ResourceLocation name = split[0].split(":").length == 2 ? new ResourceLocation(split[0]) : new ResourceLocation(Singularities.MODID, split[0]);
 		Ingredient input;
 		if (split[1].split(":").length == 1) input = new OreIngredient(split[1]);

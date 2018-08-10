@@ -18,7 +18,7 @@ public class ItemSingularity extends ItemBase {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		return Singularities.PROXY.translate(getUnlocalizedName() + ".name", WordUtils.capitalize(Singularity.getByID(stack.getMetadata()).getName()));
+		return Singularities.PROXY.translate(getTranslationKey() + ".name", WordUtils.capitalize(Singularity.getByID(stack.getMetadata()).getName()));
 	}
 
 	@Override

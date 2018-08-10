@@ -42,7 +42,7 @@ public class Singularities {
 	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
 
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(SINGULARITY);
 		}
 	};
@@ -66,7 +66,7 @@ public class Singularities {
 	@SubscribeEvent
 	public void block(Register<Block> e) {
 		e.getRegistry().register(COMPRESSOR);
-		GameRegistry.registerTileEntity(TileCompressor.class, COMPRESSOR.getRegistryName().toString());
+		GameRegistry.registerTileEntity(TileCompressor.class, COMPRESSOR.getRegistryName());
 	}
 
 	@SubscribeEvent

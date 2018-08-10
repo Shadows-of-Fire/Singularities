@@ -23,7 +23,7 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 	@Override
 	public void render(TileCompressor te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		if (te == null) return;
-		if (!te.getWorld().isAirBlock(te.getPos().up()) || Minecraft.getMinecraft().world.rayTraceBlocks(playerVec(), new Vec3d(te.getPos().up()).addVector(0.5, 0.5, 0.5)) != null) return;
+		if (!te.getWorld().isAirBlock(te.getPos().up()) || Minecraft.getMinecraft().world.rayTraceBlocks(playerVec(), new Vec3d(te.getPos().up()).add(0.5, 0.5, 0.5)) != null) return;
 
 		ICompressorRecipe rec = te.getRecipe();
 		if (rec != null) {

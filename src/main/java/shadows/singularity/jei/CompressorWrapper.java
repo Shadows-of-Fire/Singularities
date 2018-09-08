@@ -5,10 +5,10 @@ import java.awt.Color;
 import com.google.common.collect.Lists;
 
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import shadows.singularity.Singularities;
 import shadows.singularity.recipe.ICompressorRecipe;
 
@@ -22,8 +22,8 @@ public class CompressorWrapper implements IRecipeWrapper {
 
 	@Override
 	public void getIngredients(IIngredients ig) {
-		ig.setInputs(ItemStack.class, Lists.newArrayList(rec.getInput().getMatchingStacks()));
-		ig.setOutput(ItemStack.class, rec.getOutputStack());
+		ig.setInputs(VanillaTypes.ITEM, Lists.newArrayList(rec.getInput().getMatchingStacks()));
+		ig.setOutput(VanillaTypes.ITEM, rec.getOutputStack());
 	}
 
 	@Override

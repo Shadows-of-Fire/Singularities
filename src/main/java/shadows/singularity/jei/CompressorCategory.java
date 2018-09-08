@@ -7,6 +7,7 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiIngredientGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -44,13 +45,13 @@ public class CompressorCategory implements IRecipeCategory<CompressorWrapper> {
 
 	@Override
 	public void setRecipe(IRecipeLayout layout, CompressorWrapper wrapper, IIngredients ingredients) {
-		IGuiIngredientGroup<ItemStack> stacks = layout.getIngredientsGroup(ItemStack.class);
+		IGuiIngredientGroup<ItemStack> stacks = layout.getIngredientsGroup(VanillaTypes.ITEM);
 
 		stacks.init(0, false, 76, 18);
-		ItemStack output = ingredients.getOutputs(ItemStack.class).get(0).get(0);
+		ItemStack output = ingredients.getOutputs(VanillaTypes.ITEM).get(0).get(0);
 		stacks.set(0, output);
 
-		List<ItemStack> inputs = ingredients.getInputs(ItemStack.class).get(0);
+		List<ItemStack> inputs = ingredients.getInputs(VanillaTypes.ITEM).get(0);
 		stacks.init(1, true, 18, 18);
 		stacks.set(1, inputs);
 	}

@@ -38,7 +38,7 @@ public class Singularity {
 		this.name = name;
 		this.color1 = color1;
 		this.color2 = color2;
-		this.id = meta;
+		id = meta;
 		this.rarity = rarity;
 		this.hasEffect = hasEffect;
 	}
@@ -78,7 +78,7 @@ public class Singularity {
 	public EnumRarity getRarity() {
 		return rarity;
 	}
-	
+
 	public boolean hasEffect() {
 		return hasEffect;
 	}
@@ -116,21 +116,7 @@ public class Singularity {
 		META_TO_SINGULARITY.put(s.getID(), s);
 	}
 
-	public static String[] updateToV220(String[] sing) {
-		String[] ret = new String[sing.length];
-		for (int i = 0; i < sing.length; i++) {
-			String[] split = sing[i].split(", ");
-			if (split.length == 5) {
-				ret[i] = sing[i];
-				continue;
-			} else {
-				ret[i] = sing[i] + ", " + i;
-			}
-		}
-		return ret;
-	}
-
-	public static void operateSorted(Consumer<? super Singularity> c) {
+	public static void operateSorted(Consumer<Singularity> c) {
 		if (SORTED.isEmpty()) SORTED.addAll(Singularity.getSingularities().stream().sorted(SingularityComparator.INSTANCE).collect(Collectors.toList()));
 		SORTED.forEach(c);
 	}

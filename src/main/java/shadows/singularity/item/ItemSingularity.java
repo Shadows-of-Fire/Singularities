@@ -8,11 +8,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import shadows.placebo.Placebo;
+import shadows.singularity.Singularities;
 
 public class ItemSingularity extends Item {
 
 	public ItemSingularity() {
-		this.setHasSubtypes(true);
+		setHasSubtypes(true);
+		setCreativeTab(Singularities.TAB);
 	}
 
 	@Override

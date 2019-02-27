@@ -32,7 +32,7 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, i % 65536, i / 65536);
 
 			boolean thirdPerson = Minecraft.getMinecraft().getRenderManager().options.thirdPersonView == 2;
-			float viewerYaw = this.rendererDispatcher.entityYaw;
+			float viewerYaw = rendererDispatcher.entityYaw;
 			GlStateManager.translate(x + 0.5, y + 1.9, z + 0.5);
 			float angleRotate = thirdPerson ? -viewerYaw : -viewerYaw % 360 + 180;
 			float angleRotateItem = !thirdPerson ? -viewerYaw : -viewerYaw % 360 + 180;
@@ -57,25 +57,23 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 			double prog = te.getCounter() / (double) rec.getRequiredInputs();
 			prog *= 0.75;
 			int color1 = Color.WHITE.getRGB();
-			int r1 = (color1 >> 16) & 0xFF;
-			int g1 = (color1 >> 8) & 0xFF;
-			int b1 = (color1 >> 0) & 0xFF;
+			int r1 = color1 >> 16 & 0xFF;
+			int g1 = color1 >> 8 & 0xFF;
+			int b1 = color1 >> 0 & 0xFF;
 
 			Singularity s = rec.getOutputStack().getItem() instanceof ItemSingularity ? Singularity.getByID(rec.getOutputStack().getMetadata()) : null;
 
 			int color = s == null ? Color.GRAY.getRGB() : s.getColor1();
-			int r = (color >> 16) & 0xFF;
-			int g = (color >> 8) & 0xFF;
-			int b = (color >> 0) & 0xFF;
+			int r = color >> 16 & 0xFF;
+			int g = color >> 8 & 0xFF;
+			int b = color >> 0 & 0xFF;
 
 			dad.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 			dad.pos(prog, 0, 0).color(r1, g1, b1, 255).endVertex();
 			dad.pos(.75, 0, 0).color(r1, g1, b1, 255).endVertex();
 			dad.pos(.75, .1, 0).color(r1, g1, b1, 255).endVertex();
 			dad.pos(prog, .1, 0).color(r1, g1, b1, 255).endVertex();
-			Tessellator.getInstance().draw();
 
-			dad.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 			dad.pos(0, 0, 0).color(r, g, b, 255).endVertex();
 			dad.pos(prog, 0, 0).color(r, g, b, 255).endVertex();
 			dad.pos(prog, .1, 0).color(r, g, b, 255).endVertex();
@@ -90,7 +88,7 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 		} else {
 			int i = te.getWorld().getCombinedLight(te.getPos().up(), 0);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, i % 65536, i / 65536);
-			this.drawNameplate(te, "Idle", x, y, z, 12);
+			drawNameplate(te, "Idle", x, y, z, 12);
 		}
 	}
 

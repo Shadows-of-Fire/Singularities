@@ -20,6 +20,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import shadows.singularity.Singularities;
 import shadows.singularity.recipe.SingularityConfig;
 
 public class BlockCompressor extends Block {
@@ -28,7 +29,8 @@ public class BlockCompressor extends Block {
 
 	public BlockCompressor() {
 		super(Material.ANVIL, MapColor.WHITE_STAINED_HARDENED_CLAY);
-		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		setCreativeTab(Singularities.TAB);
 	}
 
 	@Override

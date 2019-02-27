@@ -23,7 +23,7 @@ public class ClientHandler {
 
 	@SubscribeEvent
 	public static void models(ModelRegistryEvent e) {
-		PlaceboUtil.sMRL(Singularities.COMPRESSOR, 0, "facing=north,type=compressor");
+		PlaceboUtil.sMRL(Singularities.COMPRESSOR, 0, "facing=north");
 		for (Singularity s : Singularity.getSingularities())
 			ModelLoader.setCustomModelResourceLocation(Singularities.SINGULARITY, s.getID(), mrl);
 

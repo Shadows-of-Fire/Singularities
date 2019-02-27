@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.oredict.OreDictionary;
+import shadows.placebo.item.ItemBlockBase;
 import shadows.placebo.util.CreativeTab;
 import shadows.placebo.util.PlaceboUtil;
 import shadows.placebo.util.RecipeHelper;
@@ -64,7 +65,7 @@ public class Singularities extends RecipeHelper {
 
 	@SubscribeEvent
 	public void item(Register<Item> e) {
-		e.getRegistry().register(PlaceboUtil.initItem(SINGULARITY, MODID, "singularity"));
+		e.getRegistry().registerAll(PlaceboUtil.initItem(SINGULARITY, MODID, "singularity"), new ItemBlockBase(COMPRESSOR));
 		Singularity.operateSorted(s -> OreDictionary.registerOre(s.makeOreName(), new ItemStack(SINGULARITY, 1, s.getID())));
 	}
 

@@ -2,7 +2,9 @@ package shadows.singularity.block;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -18,16 +20,14 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import shadows.placebo.block.BlockBasic;
-import shadows.singularity.Singularities;
 import shadows.singularity.recipe.SingularityConfig;
 
-public class BlockCompressor extends BlockBasic {
+public class BlockCompressor extends Block {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockCompressor() {
-		super("compressor", Material.ANVIL, 5.0F, 300F, Singularities.INFO);
+		super(Material.ANVIL, MapColor.WHITE_STAINED_HARDENED_CLAY);
 		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 

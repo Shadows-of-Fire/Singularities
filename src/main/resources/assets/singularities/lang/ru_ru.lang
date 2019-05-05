@@ -1,0 +1,5 @@
+item.singularities.singularity.name=%s сингулярность
+jei.singularities.compressor.name=Рецепт компрессора
+jei.singularities.needed.name=Требуется: %d
+itemGroup.singularities=Сингулярности
+tile.singularities.compressor.name=Компрессор

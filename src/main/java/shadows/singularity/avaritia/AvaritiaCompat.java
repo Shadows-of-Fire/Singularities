@@ -23,6 +23,7 @@ import shadows.singularity.item.Singularity;
 import shadows.singularity.recipe.CompressorManager;
 import shadows.singularity.recipe.ICompressorRecipe;
 
+@SuppressWarnings("deprecation")
 public class AvaritiaCompat {
 
 	public static void copyToAvaritia(ICompressorRecipe recipe) {

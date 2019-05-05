@@ -15,8 +15,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -61,7 +59,6 @@ public class TileCompressor extends TileEntity implements ITickable {
 		counter = tag.getInteger("count");
 		recipe = CompressorManager.searchByName(new ResourceLocation(tag.getString("recipe")));
 		handler.deserializeNBT(tag.getCompoundTag("handler"));
-		if (handler.getSlots() == 1) handler.setSize(10); //Migrate old data
 		super.readFromNBT(tag);
 	}
 
@@ -73,59 +70,51 @@ public class TileCompressor extends TileEntity implements ITickable {
 			ticks = 0;
 			for (EntityItem ei : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)).grow(3, 1, 3))) {
 				if (ei.getEntityData().getBoolean(RECENT_KEY)) continue;
-				ItemStack stack = ei.getItem();
-				findRecipeAndUse(stack);
+				matchAndUse(ei.getItem());
 			}
 		}
 		for (int i = 0; i < handler.getSlots(); i++) {
-			if (recipe != null) tryIncreaseCount(handler.getStackInSlot(i));
-			else findRecipeAndUse(handler.getStackInSlot(i));
+			matchAndUse(handler.getStackInSlot(i));
 		}
 	}
 
-	public void tryIncreaseCount(ItemStack stack) {
-		int stacksize = stack.getCount();
+	public void compressStack(ItemStack stack) {
 		int needed = recipe.getRequiredInputs() - counter;
-
-		if (stacksize - needed < 0) {
-			counter += stacksize;
-			stack.setCount(0);
-		} else if (stacksize - needed >= 0) {
-
+		counter += stack.getCount();
+		stack.shrink(needed);
+		if (counter >= recipe.getRequiredInputs()) {
 			TileEntity e = world.getTileEntity(pos.down());
-			if (e != null && e.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
-				if (!jamItRightInThere(e.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))) trySpawnEntity();
-			} else trySpawnEntity();
-
+			if (e == null || !putOutputInHandler(e.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))) spawnOutputAsItem();
 			counter = 0;
 			recipe = null;
-			stack.shrink(needed);
-
 		}
-		if (!stack.isEmpty()) {
-			findRecipeAndUse(stack);
-		}
-
+		if (!stack.isEmpty()) matchAndUse(stack);
 		markDirty();
 		VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
 	}
 
-	private void findRecipeAndUse(ItemStack stack) {
-		ICompressorRecipe rec = CompressorManager.searchByStack(stack);
-		if (rec != null && (rec == recipe || recipe == null)) if (recipe == null) recipe = rec;
-		if (rec != null) tryIncreaseCount(stack);
+	private void matchAndUse(ItemStack stack) {
+		if (recipe != null && recipe.getInput().apply(stack)) compressStack(stack);
+		else if (recipe == null) {
+			ICompressorRecipe rec = CompressorManager.searchByStack(stack);
+			if (rec != null) {
+				recipe = rec;
+				compressStack(stack);
+			}
+		}
 	}
 
-	private void trySpawnEntity() {
+	private void spawnOutputAsItem() {
 		EntityItem i = new EntityItem(world, pos.getX(), pos.getY() + distance, pos.getZ(), recipe.getOutputStack().copy());
 		i.setDefaultPickupDelay();
 		i.getEntityData().setBoolean(RECENT_KEY, true);
 		world.spawnEntity(i);
 	}
 
-	private boolean jamItRightInThere(IItemHandler handad) {
-		for (int i = 0; i < handad.getSlots(); i++)
-			if (handad.insertItem(i, recipe.getOutputStack().copy(), false).isEmpty()) return true;
+	private boolean putOutputInHandler(IItemHandler handler) {
+		if (handler == null) return false;
+		for (int i = 0; i < handler.getSlots(); i++)
+			if (handler.insertItem(i, recipe.getOutputStack().copy(), false).isEmpty()) return true;
 		return false;
 	}
 
@@ -136,21 +125,29 @@ public class TileCompressor extends TileEntity implements ITickable {
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, 150, getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
 	}
 
 	@Override
 	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setInteger("count", counter);
+		tag.setString("recipe", recipe == null ? "null" : recipe.getID().toString());
+		return tag;
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.getNbtCompound());
+		handleUpdateTag(pkt.getNbtCompound());
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	public void handleUpdateTag(NBTTagCompound tag) {
+		counter = tag.getInteger("count");
+		recipe = CompressorManager.searchByName(new ResourceLocation(tag.getString("recipe")));
+	}
+
+	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return Block.FULL_BLOCK_AABB.expand(1, 1, 1).offset(pos);
 	}
@@ -163,7 +160,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing facing) {
-		if (facing != EnumFacing.UP && SingularityConfig.pipeInput && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(handler);
+		if (SingularityConfig.pipeInput && facing != EnumFacing.UP && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(handler);
 		return super.getCapability(cap, facing);
 	}
 
@@ -183,9 +180,14 @@ public class TileCompressor extends TileEntity implements ITickable {
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (tile.recipe != null && tile.recipe.getInput().apply(stack)) return super.insertItem(slot, stack, simulate);
-			else if (tile.recipe == null && (tile.recipe = CompressorManager.searchByStack(stack)) != null) return super.insertItem(slot, stack, simulate);
+			if (isItemValid(slot, stack)) return super.insertItem(slot, stack, simulate);
 			return stack;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			if (tile.recipe != null && tile.recipe.getInput().apply(stack)) return true;
+			else return tile.recipe == null && (tile.recipe = CompressorManager.searchByStack(stack)) != null;
 		}
 
 	}

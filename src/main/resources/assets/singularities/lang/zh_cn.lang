@@ -1,0 +1,5 @@
+item.singularities.singularity.name=%s 奇点
+jei.singularities.compressor.name=压缩合成
+jei.singularities.needed.name=需要 %d
+itemGroup.singularities=奇点
+tile.singularities.compressor.name=压缩机
